@@ -1,0 +1,198 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+  contactProperties [
+    DEF interiorWheelMat ContactProperties {
+      material1 "interiorWheelMat"
+      coulombFriction [
+        0, 2, 0
+      ]
+      frictionRotation -0.785 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+    DEF exteriorWheelMat ContactProperties {
+      material1 "exteriorWheelMat"
+      coulombFriction [
+        0, 2, 0
+      ]
+      frictionRotation 0.785 0
+      bounce 0
+      forceDependentSlip [
+        10, 0
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.014988559396221148 0.9991623491605403 0.03807811848314788 0.7505713896788164
+  position -1.7775674200258538 -0.012519836208630244 1.8052164787833036
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation 0 0 -0.2
+  floorSize 2 2
+}
+Robot {
+  children [
+    DEF wheelFrontLeft HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0.1 0.12 -0.035
+      }
+      device [
+        DEF ecoderFrontLeft PositionSensor {
+          name "ecoderFrontLeft"
+        }
+        DEF motorFrontLeft RotationalMotor {
+          name "motorFrontLeft"
+        }
+      ]
+      endPoint Solid {
+        translation 0.1 0.12 -0.035
+        rotation 1 0 0 1.57
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0 0 0
+              metalness 0
+            }
+            geometry DEF wheelFrontLeft Cylinder {
+              height 0.04
+              radius 0.04
+            }
+          }
+        ]
+        contactMaterial "exteriorWheelMat"
+        boundingObject USE wheelFrontLeft
+        physics Physics {
+        }
+      }
+    }
+    DEF wheelFrontRight HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor 0.1 -0.12 -0.035
+      }
+      device [
+        DEF ecoderFrontRight PositionSensor {
+          name "ecoderFrontRight"
+        }
+        DEF motorFrontRight RotationalMotor {
+          name "motorFrontRight"
+        }
+      ]
+      endPoint Solid {
+        translation 0.1 -0.12 -0.035
+        rotation 1 0 0 1.57
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0 0 0
+              metalness 0
+            }
+            geometry DEF wheelFrontRight Cylinder {
+              height 0.04
+              radius 0.04
+            }
+          }
+        ]
+        name "solid(1)"
+        contactMaterial "interiorWheelMat"
+        boundingObject USE wheelFrontRight
+        physics Physics {
+        }
+      }
+    }
+    DEF wheelBackLeft HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor -0.1 0.12 -0.035
+      }
+      device [
+        DEF ecoderBackLeft PositionSensor {
+          name "ecoderBackLeft"
+        }
+        DEF motorBackLeft RotationalMotor {
+          name "motorBackLeft"
+        }
+      ]
+      endPoint Solid {
+        translation -0.1 0.12 -0.035
+        rotation 1 0 0 1.57
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0 0 0
+              metalness 0
+            }
+            geometry DEF wheelBackLeft Cylinder {
+              height 0.04
+              radius 0.04
+            }
+          }
+        ]
+        name "solid(2)"
+        contactMaterial "interiorWheelMat"
+        boundingObject USE wheelBackLeft
+        physics Physics {
+        }
+      }
+    }
+    DEF wheelBackRight HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 1 0
+        anchor -0.1 -0.12 -0.035
+      }
+      device [
+        DEF encoderBackRight PositionSensor {
+          name "encoderBackRight"
+        }
+        DEF motorBackRight RotationalMotor {
+          name "motorBackRight"
+        }
+      ]
+      endPoint Solid {
+        translation -0.1 -0.12 -0.035
+        rotation 1 0 0 1.57
+        children [
+          Shape {
+            appearance PBRAppearance {
+              baseColor 0 0 0
+              metalness 0
+            }
+            geometry DEF wheelBackRight Cylinder {
+              height 0.04
+              radius 0.04
+            }
+          }
+        ]
+        name "solid(3)"
+        contactMaterial "exteriorWheelMat"
+        boundingObject USE wheelBackRight
+        physics Physics {
+        }
+      }
+    }
+    Shape {
+      geometry Box {
+        size 0.3 0.2 0.05
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.3 0.2 0.05
+  }
+  physics Physics {
+  }
+  controller "explorer_brain"
+}
