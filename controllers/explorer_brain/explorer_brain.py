@@ -1,26 +1,26 @@
 from controller import Robot, Keyboard
 
-# ۱. راه‌اندازی ربات و زمان‌بندی شبیه‌سازی
+# Initialize robot and timestep
 robot = Robot()
 timestep = int(robot.getBasicTimeStep())
 
-# ۲. فعال‌سازی کیبورد
+# Enable keyboard input
 keyboard = Keyboard()
 keyboard.enable(timestep)
 
-# ۳. راه‌اندازی موتورها با نام‌های جدید
-wheel_names = ['motorFrontLeft', 'motorFrontRight', 'motorBackLeft', 'motorBackRight']
+# Initialize motors
+wheelNames = ['motorFrontLeft', 'motorFrontRight', 'motorBackLeft', 'motorBackRight']
 wheels = []
 
-for name in wheel_names:
+for name in wheelNames:
     motor = robot.getDevice(name)
     motor.setPosition(float('inf'))
     motor.setVelocity(0.0)
     wheels.append(motor)
 
-# ۴. تابع سینماتیک حرکت همه‌جهته (مکانوم/امنی)
+# Omnidirectional (Mecanum) kinematics
 def move(vx, vy, omega):
-    # ترکیب بردارهای سرعت برای ۴ چرخ
+    # Calculate individual wheel speeds
     speeds = [
         vy - vx - omega,  # Front Left
         vy + vx + omega,  # Front Right
@@ -30,28 +30,41 @@ def move(vx, vy, omega):
     for i in range(4):
         wheels[i].setVelocity(speeds[i])
 
-# ۵. حلقه اصلی شبیه‌سازی
-speed = 6.0  # سرعت پایه ربات
+# Initialize ultrasonic sensor
+distanceSensor = robot.getDevice('ultrasonicFront')
+distanceSensor.enable(timestep)
 
+baseSpeed = 4.0
+
+# Main control loop
 while robot.step(timestep) != -1:
     key = keyboard.getKey()
+    
+    # Read sensor value
+    sensorValue = distanceSensor.getValue()
     
     vx = 0.0
     vy = 0.0
     omega = 0.0
     
-    # کنترل‌های حرکتی با کیبورد
+    # Keyboard controls (WASD for translation, QE for rotation)
     if key == ord('W'):
-        vy = speed      # جلو
+        vy = baseSpeed
     elif key == ord('S'):
-        vy = -speed     # عقب
+        vy = -baseSpeed
     elif key == ord('A'):
-        vx = speed     # سُر خوردن به چپ
+        vx = -baseSpeed
     elif key == ord('D'):
-        vx = -speed      # سُر خوردن به راست
+        vx = baseSpeed
     elif key == ord('Q'):
-        omega = speed   # چرخش به چپ
+        omega = baseSpeed
     elif key == ord('E'):
-        omega = -speed  # چرخش به راست
+        omega = -baseSpeed
         
+    # Emergency brake system (Frontal collision avoidance)
+    if sensorValue < 0.25 and vy > 0:
+        vy = 0.0
+        print("--- Emergency Brake Activated! Obstacle detected. ---")
+        
+    # Apply velocities to wheels
     move(vx, vy, omega)

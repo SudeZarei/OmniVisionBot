@@ -31,8 +31,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.014988559396221148 0.9991623491605403 0.03807811848314788 0.7505713896788164
-  position -1.7775674200258538 -0.012519836208630244 1.8052164787833036
+  orientation -0.20694505125699003 0.19285551356091585 0.9591561377843533 1.6827750047932
+  position 0.15805229269936794 -1.4859837321124842 0.6666294162964183
 }
 TexturedBackground {
 }
@@ -43,7 +43,28 @@ RectangleArena {
   floorSize 2 2
 }
 Robot {
+  rotation 1 0 0 4.692820414042842e-06
   children [
+    DistanceSensor {
+      translation 0.16 0 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0.333333 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.02 0.02 0.02
+          }
+        }
+      ]
+      name "ultrasonicFront"
+      lookupTable [
+        0 0 0
+        2 2 0
+      ]
+      type "sonar"
+    }
     DEF wheelFrontLeft HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 1 0
