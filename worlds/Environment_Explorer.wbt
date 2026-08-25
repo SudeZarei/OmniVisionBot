@@ -31,8 +31,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.20694505125699003 0.19285551356091585 0.9591561377843533 1.6827750047932
-  position 0.15805229269936794 -1.4859837321124842 0.6666294162964183
+  orientation -0.10649666673192745 0.05725577749036916 0.9926632036692817 2.161130065745966
+  position 0.3368626445374308 -0.6461098636072385 0.17420071507228435
 }
 TexturedBackground {
 }
@@ -45,6 +45,47 @@ RectangleArena {
 Robot {
   rotation 1 0 0 4.692820414042842e-06
   children [
+    Camera {
+      translation 0.18 0 0.0375
+      children [
+        Group {
+          children [
+            Transform {
+              translation -0.04 0 0
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0.372549 0.372549 0.372549
+                    metalness 0
+                  }
+                  geometry Box {
+                    size 0.02 0.05 0.025
+                  }
+                }
+              ]
+            }
+            Transform {
+              translation -0.025 0 0
+              rotation 0 1 0 1.5708
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0 0 0
+                  }
+                  geometry Cylinder {
+                    height 0.01
+                    radius 0.01
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      name "cameraMain"
+      width 640
+      height 480
+    }
     DistanceSensor {
       translation 0.16 0 0
       children [
