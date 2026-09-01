@@ -3,6 +3,7 @@
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/BrushedAluminium.proto"
 
 WorldInfo {
   contactProperties [
@@ -31,26 +32,46 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.10649666673192745 0.05725577749036916 0.9926632036692817 2.161130065745966
-  position 0.3368626445374308 -0.6461098636072385 0.17420071507228435
+  orientation 0.004999908228406212 0.9999733124905312 -0.005326840003409496 1.5075266344444307
+  position -0.8295810659709268 0.2563389262220763 6.52474358917198
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
-RectangleArena {
+DEF FLOOR Solid {
   translation 0 0 -0.2
-  floorSize 2 2
+  rotation 0 0 1 -1.5708
+  children [
+    DEF FLOOR_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/samples/curriculum/worlds/textures/oval_line.png"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+      geometry Plane {
+        size 3 4
+      }
+    }
+  ]
+  boundingObject USE FLOOR_SHAPE
+  locked TRUE
 }
 Robot {
+  translation 0 -1.075 0
   rotation 1 0 0 4.692820414042842e-06
   children [
     Camera {
       translation 0.18 0 0.0375
+      rotation 0 1 0 0
       children [
         Group {
           children [
-            Transform {
+            Pose {
               translation -0.04 0 0
               children [
                 Shape {
@@ -64,7 +85,7 @@ Robot {
                 }
               ]
             }
-            Transform {
+            Pose {
               translation -0.025 0 0
               rotation 0 1 0 1.5708
               children [
@@ -83,8 +104,8 @@ Robot {
         }
       ]
       name "cameraMain"
-      width 640
-      height 480
+      width 720
+      height 640
     }
     DistanceSensor {
       translation 0.16 0 0
@@ -257,4 +278,15 @@ Robot {
   physics Physics {
   }
   controller "explorer_brain"
+}
+RectangleArena {
+  translation 0 0 -0.25
+  floorSize 4 3
+  floorTileSize 0.1 0.01
+  floorAppearance NULL
+  wallHeight 0.15
+  wallAppearance BrushedAluminium {
+    textureTransform Appearance {
+    }
+  }
 }
