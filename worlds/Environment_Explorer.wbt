@@ -32,15 +32,14 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.004999908228406212 0.9999733124905312 -0.005326840003409496 1.5075266344444307
-  position -0.8295810659709268 0.2563389262220763 6.52474358917198
+  orientation 0.05746829849577634 0.0008719372355436716 -0.9983469509110837 3.1113001502187516
+  position 1.622892451193129 0.12470476801641608 0.41376590754331743
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 DEF FLOOR Solid {
-  translation 0 0 -0.2
   rotation 0 0 1 -1.5708
   children [
     DEF FLOOR_SHAPE Shape {
@@ -289,4 +288,86 @@ RectangleArena {
     textureTransform Appearance {
     }
   }
+}
+Transform {
+  scale 0.2 0.2 0.2
+}
+DEF TrafficLight Solid {
+  children [
+    DEF RedLight Transform {
+      translation 0.03 0 0.56
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 0 0
+            metalness 0
+            emissiveColor 1 0 0
+          }
+          geometry Sphere {
+            radius 0.02
+          }
+        }
+      ]
+    }
+    DEF YellowLight Transform {
+      translation 0.03 0 0.5
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 1 0
+            metalness 0
+            emissiveColor 1 1 0
+          }
+          geometry Sphere {
+            radius 0.02
+          }
+        }
+      ]
+    }
+    DEF GreenLight Transform {
+      translation 0.03 0 0.44
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 1 0
+            metalness 0
+            emissiveColor 0 1 0
+          }
+          geometry Sphere {
+            radius 0.02
+          }
+        }
+      ]
+    }
+    DEF Box Transform {
+      translation 0 0 0.5
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.1 0.1 0.1
+            metalness 0
+          }
+          geometry Box {
+            size 0.06 0.06 0.2
+          }
+        }
+      ]
+    }
+    DEF Pole Transform {
+      translation 0 0 0.2
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.3 0.3 0.3
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.4
+            radius 0.01
+          }
+        }
+      ]
+    }
+  ]
+  name "solid(1)"
 }
