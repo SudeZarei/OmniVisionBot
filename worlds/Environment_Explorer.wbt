@@ -31,8 +31,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.5659186281411536 0.03089943355660754 -0.8238818673382221 3.0516845617908435
-  position 0.9610638866780912 0.08083672530200692 3.5913996250858964
+  orientation 0.45058998348630647 -0.017109761202186165 -0.892567041097426 3.209351662972066
+  position 2.4534069921580284 -0.141337989627218 3.7497458961963144
 }
 TexturedBackground {
 }
@@ -369,4 +369,22 @@ DEF TrafficLight Robot {
   name "solid(1)"
   controller "traffic_controller"
   supervisor TRUE
+}
+DEF Obstacle Solid {
+  translation -0.5 -1.08 0.1
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.2 0.2 0.2
+      }
+    }
+  ]
+  name "solid(2)"
+  boundingObject Box {
+    size 0.2 0.2 0.2
+  }
 }
