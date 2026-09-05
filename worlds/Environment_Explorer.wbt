@@ -3,7 +3,6 @@
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/BrushedAluminium.proto"
 
 WorldInfo {
   contactProperties [
@@ -32,8 +31,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.05746829849577634 0.0008719372355436716 -0.9983469509110837 3.1113001502187516
-  position 1.622892451193129 0.12470476801641608 0.41376590754331743
+  orientation 0.5659186281411536 0.03089943355660754 -0.8238818673382221 3.0516845617908435
+  position 0.9610638866780912 0.08083672530200692 3.5913996250858964
 }
 TexturedBackground {
 }
@@ -61,8 +60,8 @@ DEF FLOOR Solid {
   locked TRUE
 }
 Robot {
-  translation 0 -1.075 0
-  rotation 1 0 0 4.692820414042842e-06
+  translation 0 -1.08 0.0742418
+  rotation 0.0008195165114095637 5.7072942495623184e-05 -0.9999996625676264 -0.01872448787057035
   children [
     Camera {
       translation 0.18 0 0.0375
@@ -103,6 +102,7 @@ Robot {
         }
       ]
       name "cameraMain"
+      fieldOfView 1.5
       width 720
       height 640
     }
@@ -128,6 +128,7 @@ Robot {
     }
     DEF wheelFrontLeft HingeJoint {
       jointParameters HingeJointParameters {
+        position 211.8852447235189
         axis 0 1 0
         anchor 0.1 0.12 -0.035
       }
@@ -141,7 +142,7 @@ Robot {
       ]
       endPoint Solid {
         translation 0.1 0.12 -0.035
-        rotation 1 0 0 1.57
+        rotation 0.5109945394160879 -0.6080596081860273 0.6075755867211874 2.1961381626833454
         children [
           Shape {
             appearance PBRAppearance {
@@ -162,6 +163,7 @@ Robot {
     }
     DEF wheelFrontRight HingeJoint {
       jointParameters HingeJointParameters {
+        position 285.8627468492515
         axis 0 1 0
         anchor 0.1 -0.12 -0.035
       }
@@ -175,7 +177,7 @@ Robot {
       ]
       endPoint Solid {
         translation 0.1 -0.12 -0.035
-        rotation 1 0 0 1.57
+        rotation -0.007840407225278649 -0.7073665265523564 0.7068034557978592 3.1572856380007015
         children [
           Shape {
             appearance PBRAppearance {
@@ -197,6 +199,7 @@ Robot {
     }
     DEF wheelBackLeft HingeJoint {
       jointParameters HingeJointParameters {
+        position 211.88525615679382
         axis 0 1 0
         anchor -0.1 0.12 -0.035
       }
@@ -210,7 +213,7 @@ Robot {
       ]
       endPoint Solid {
         translation -0.1 0.12 -0.035
-        rotation 1 0 0 1.57
+        rotation 0.5109989210815801 -0.6080577656009475 0.6075737456028234 2.19613121058121
         children [
           Shape {
             appearance PBRAppearance {
@@ -232,6 +235,7 @@ Robot {
     }
     DEF wheelBackRight HingeJoint {
       jointParameters HingeJointParameters {
+        position 285.86276027533626
         axis 0 1 0
         anchor -0.1 -0.12 -0.035
       }
@@ -245,7 +249,7 @@ Robot {
       ]
       endPoint Solid {
         translation -0.1 -0.12 -0.035
-        rotation 1 0 0 1.57
+        rotation -0.0078356621316757 -0.7073665528624963 0.7068034820870559 3.1572761408375807
         children [
           Shape {
             appearance PBRAppearance {
@@ -279,69 +283,62 @@ Robot {
   controller "explorer_brain"
 }
 RectangleArena {
-  translation 0 0 -0.25
+  translation 0 0 -0.05
   floorSize 4 3
   floorTileSize 0.1 0.01
   floorAppearance NULL
   wallHeight 0.15
-  wallAppearance BrushedAluminium {
-    textureTransform Appearance {
-    }
-  }
+  wallAppearance NULL
 }
-Transform {
-  scale 0.2 0.2 0.2
-}
-DEF TrafficLight Solid {
+DEF TrafficLight Robot {
+  translation 0 1.25 0
   children [
-    DEF RedLight Transform {
-      translation 0.03 0 0.56
+    DEF Box Pose {
+      translation 0 0 0.4
       children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 1 0 0
-            metalness 0
-            emissiveColor 1 0 0
-          }
-          geometry Sphere {
-            radius 0.02
-          }
+        DEF RedLight Pose {
+          translation 0.03 0 0.06
+          children [
+            Shape {
+              appearance DEF RedMat PBRAppearance {
+                baseColor 0.1 0.1 0.1
+                metalness 0
+              }
+              geometry Sphere {
+                radius 0.02
+              }
+            }
+          ]
         }
-      ]
-    }
-    DEF YellowLight Transform {
-      translation 0.03 0 0.5
-      children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 1 1 0
-            metalness 0
-            emissiveColor 1 1 0
-          }
-          geometry Sphere {
-            radius 0.02
-          }
+        DEF YellowLight Pose {
+          translation 0.03 0 0
+          children [
+            Shape {
+              appearance DEF YellowMat PBRAppearance {
+                baseColor 0.1 0.1 0.1
+                metalness 0
+              }
+              geometry Sphere {
+                radius 0.02
+              }
+            }
+          ]
         }
-      ]
-    }
-    DEF GreenLight Transform {
-      translation 0.03 0 0.44
-      children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 0 1 0
-            metalness 0
-            emissiveColor 0 1 0
-          }
-          geometry Sphere {
-            radius 0.02
-          }
+        DEF GreenLight Pose {
+          translation 0.03 0 -0.06
+          children [
+            Shape {
+              appearance DEF GreenMat PBRAppearance {
+                baseColor 0 1 0
+                metalness 0
+                emissiveColor 0 1 0
+              }
+              geometry Sphere {
+                radius 0.02
+              }
+            }
+          ]
         }
-      ]
-    }
-    DEF Box Transform {
-      translation 0 0 0.5
-      children [
         Shape {
           appearance PBRAppearance {
             baseColor 0.1 0.1 0.1
@@ -353,7 +350,7 @@ DEF TrafficLight Solid {
         }
       ]
     }
-    DEF Pole Transform {
+    DEF Pole Pose {
       translation 0 0 0.2
       children [
         Shape {
@@ -370,4 +367,6 @@ DEF TrafficLight Solid {
     }
   ]
   name "solid(1)"
+  controller "traffic_controller"
+  supervisor TRUE
 }
