@@ -31,8 +31,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.45058998348630647 -0.017109761202186165 -0.892567041097426 3.209351662972066
-  position 2.4534069921580284 -0.141337989627218 3.7497458961963144
+  orientation 0.3528522389068205 0.00623601635653331 -0.9356582760807737 3.1085235785752454
+  position 5.318820904647433 1.788905122655803 4.960093913783868
 }
 TexturedBackground {
 }
@@ -104,7 +104,7 @@ Robot {
       name "cameraMain"
       fieldOfView 1.5
       width 720
-      height 640
+      height 720
     }
     DistanceSensor {
       translation 0.16 0 0
@@ -291,27 +291,28 @@ RectangleArena {
   wallAppearance NULL
 }
 DEF TrafficLight Robot {
-  translation 0 1.25 0
+  translation 0 1.3 0
   children [
     DEF Box Pose {
-      translation 0 0 0.4
+      translation 0 -0.2 0.2
       children [
         DEF RedLight Pose {
-          translation 0.03 0 0.06
+          translation 0.02 -0.045 0
           children [
             Shape {
               appearance DEF RedMat PBRAppearance {
-                baseColor 0.1 0.1 0.1
+                baseColor 1 0 0
                 metalness 0
+                emissiveColor 1 0 0
               }
               geometry Sphere {
-                radius 0.02
+                radius 0.015
               }
             }
           ]
         }
         DEF YellowLight Pose {
-          translation 0.03 0 0
+          translation 0.02 0 0
           children [
             Shape {
               appearance DEF YellowMat PBRAppearance {
@@ -319,22 +320,21 @@ DEF TrafficLight Robot {
                 metalness 0
               }
               geometry Sphere {
-                radius 0.02
+                radius 0.015
               }
             }
           ]
         }
         DEF GreenLight Pose {
-          translation 0.03 0 -0.06
+          translation 0.02 0.045 0
           children [
             Shape {
               appearance DEF GreenMat PBRAppearance {
-                baseColor 0 1 0
+                baseColor 0.1 0.1 0.1
                 metalness 0
-                emissiveColor 0 1 0
               }
               geometry Sphere {
-                radius 0.02
+                radius 0.015
               }
             }
           ]
@@ -345,23 +345,43 @@ DEF TrafficLight Robot {
             metalness 0
           }
           geometry Box {
-            size 0.06 0.06 0.2
+            size 0.04 0.15 0.05
           }
         }
       ]
     }
     DEF Pole Pose {
-      translation 0 0 0.2
       children [
-        Shape {
-          appearance PBRAppearance {
-            baseColor 0.3 0.3 0.3
-            metalness 0
-          }
-          geometry Cylinder {
-            height 0.4
-            radius 0.01
-          }
+        DEF Vertical Pose {
+          translation 0 0 0.1
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.3 0.3 0.3
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.2
+                radius 0.0085
+              }
+            }
+          ]
+        }
+        DEF Horizontal Pose {
+          translation 0 -0.09 0.2
+          rotation 1 0 0 1.5708
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.3 0.3 0.3
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.2
+                radius 0.0085
+              }
+            }
+          ]
         }
       ]
     }

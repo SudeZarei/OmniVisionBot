@@ -20,7 +20,6 @@ for name in wheelNames:
     motor.setVelocity(0.0)
     wheels.append(motor)
 
-
 def move(vx, vy, omega):
     speeds = [
         vy - vx - omega,  # Front Left
@@ -30,7 +29,6 @@ def move(vx, vy, omega):
     ]
     for i in range(4):
         wheels[i].setVelocity(speeds[i])
-
 
 # Initialize ultrasonic sensor
 distanceSensor = robot.getDevice('ultrasonicFront')
@@ -46,7 +44,7 @@ cameraHeight = cameraMain.getHeight()
 baseSpeed = 10.0
 
 # ---------------------------------------------------------------------------
-# ANALYTICAL IPM CALIBRATION (Option C)
+# ANALYTICAL IPM CALIBRATION
 # ---------------------------------------------------------------------------
 CAMERA_HEIGHT_M = 0.05
 CAMERA_PITCH_RAD = 0
@@ -59,7 +57,6 @@ vFov = 2 * np.arctan(np.tan(hFov / 2) * (cameraHeight / cameraWidth))
 fx = (cameraWidth / 2) / np.tan(hFov / 2)
 fy = (cameraHeight / 2) / np.tan(vFov / 2)
 cx, cy = cameraWidth / 2, cameraHeight / 2
-
 
 def project_ground_point(X, Z, height, pitch):
     x_c0 = X
@@ -76,7 +73,6 @@ def project_ground_point(X, Z, height, pitch):
     u = fx * (x_c / z_c) + cx
     v = fy * (y_c / z_c) + cy
     return (u, v)
-
 
 worldCorners = [
     (-HALF_WIDTH_M, Z_NEAR_M),
@@ -104,6 +100,9 @@ matrix = cv2.getPerspectiveTransform(ptsSrc, ptsDst)
 
 traffic_state = "GREEN"
 yellow_memory_timer = 0
+
+prev_error = 0.0
+red_brake_latch = False  # Lock brake state
 # ---------------------------------------------------------------------------
 
 # Main control loop
@@ -136,17 +135,27 @@ while robot.step(timestep) != -1:
         pixels_yellow = cv2.countNonZero(mask_yellow)
         pixels_green = cv2.countNonZero(mask_green)
         
-        detection_threshold = 30
+        # Threshold definitions
+        vision_threshold = 30
+        stop_threshold = 600  # Increased for closer stop
         
-        # Update traffic state based on current vision
-        if pixels_red > detection_threshold:
-            traffic_state = "RED"
-        elif pixels_green > detection_threshold:
-            traffic_state = "GREEN"
-            yellow_memory_timer = 0
-        elif pixels_yellow > detection_threshold:
-            traffic_state = "YELLOW"
-            yellow_memory_timer = 70
+        color_pixels = {
+            "RED": pixels_red,
+            "GREEN": pixels_green,
+            "YELLOW": pixels_yellow
+        }
+        
+        dominant_color = max(color_pixels, key=color_pixels.get)
+        max_pixels = color_pixels[dominant_color]
+        
+        # Update traffic state
+        if max_pixels > vision_threshold:
+            traffic_state = dominant_color
+            
+            if traffic_state == "GREEN":
+                yellow_memory_timer = 0
+            elif traffic_state == "YELLOW":
+                yellow_memory_timer = 70
 
         # Perspective Transform for Line Following
         warped = cv2.warpPerspective(gray, matrix, (cameraWidth, cameraHeight), borderValue=255)
@@ -170,32 +179,39 @@ while robot.step(timestep) != -1:
                 error = cx_pt - (cameraWidth / 2)
                 kp = 0.008
 
-               # 1. Base logic for normal speed and steering
+                # Base speed logic
                 vy = baseSpeed * 0.7
                 omega = -error * kp
                 
-                # 2. Apply Traffic Light Logic (Overrides Base Speed)
+                # Apply traffic logic
                 if traffic_state == "RED":
-                    vy = 0.0
-                    omega = 0.0
-                    
+                    if pixels_red > stop_threshold:
+                        red_brake_latch = True
+                        
+                    if red_brake_latch:
+                        vy = 0.0
+                        omega = 0.0
+                        
                 elif traffic_state == "YELLOW":
-                    vy = baseSpeed * 0.3  # سرعت کند
+                    red_brake_latch = False
+                    if pixels_yellow > (stop_threshold / 2):
+                        vy = baseSpeed * 0.3
                     
-               
-                    if pixels_yellow <= detection_threshold:
+                    if pixels_yellow <= vision_threshold:
                         yellow_memory_timer -= 1
                         
-                 
                     if yellow_memory_timer <= 0:
                         traffic_state = "GREEN"
+                        
+                elif traffic_state == "GREEN":
+                    red_brake_latch = False
                 
         cv2.imshow("OmniVisionBot Camera Feed", imageArray)
         cv2.imshow("Warped (Birds-Eye)", warped)
         cv2.imshow("Brain View (Focused ROI)", thresh)
         cv2.waitKey(1)
 
-    # Keyboard override (works regardless of traffic lights)
+    # Keyboard override
     if key == ord('W'):
         vy = baseSpeed
         omega = 0.0
